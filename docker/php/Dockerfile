@@ -12,6 +12,9 @@ RUN apk add --no-cache \
 # Instala Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+# Configura diretório seguro para o Git dentro do container
+RUN git config --global --add safe.directory /var/www
+
 WORKDIR /var/www
 
 EXPOSE 9000
