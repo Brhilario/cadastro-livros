@@ -20,13 +20,10 @@ final class RelatorioController
   {
     $reportData = $this->relatorioModel->getLivrosAgrupadosPorAutor();
 
-    $grandTotalLivros = 0;
-    $grandTotalValue = 0.0;
+    $totaisGerais = $this->relatorioModel->calcularTotaisGerais($reportData);
 
-    foreach ($reportData as $authorGroup) {
-      $grandTotalLivros += $authorGroup['total_livros'];
-      $grandTotalValue += $authorGroup['valor_total'];
-    }
+    $grandTotalLivros = $totaisGerais['total_livros'];
+    $grandTotalValue = $totaisGerais['valor_total'];
 
     require __DIR__ . '/../Views/relatorios/index.php';
   }
