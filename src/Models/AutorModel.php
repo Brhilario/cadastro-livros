@@ -15,9 +15,9 @@ final class AutorModel
 {
   private PDO $pdo;
 
-  public function __construct()
+  public function __construct(?PDO $pdo = null)
   {
-    $this->pdo = Database::getConnection();
+    $this->pdo = $pdo ?? Database::getConnection();
   }
 
   /**
@@ -95,5 +95,31 @@ final class AutorModel
       }
       throw $e;
     }
+  }
+
+  /**
+   * Obtém o resumo estatístico do autor através da Stored Procedure sp_obter_resumo_autor.
+   *
+   * @param int $id ID do autor (CodAu)
+   * @return array{autor_id: int, autor_nome: string, total_livros: int, valor_total_acervo: float, preco_medio_livro: float}|null
+   */
+  public function getResumoPorAutor(int $id): ?array
+  {
+    $stmt = $this->pdo->prepare('CALL sp_obter_resumo_autor(:id)');
+    $stmt->execute([':id' => $id]);
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    $stmt->closeCursor();
+
+    if (!$row) {
+      return null;
+    }
+
+    return [
+      'autor_id' => (int) $row['autor_id'],
+      'autor_nome' => (string) $row['autor_nome'],
+      'total_livros' => (int) $row['total_livros'],
+      'valor_total_acervo' => (float) $row['valor_total_acervo'],
+      'preco_medio_livro' => (float) $row['preco_medio_livro'],
+    ];
   }
 }

@@ -22,6 +22,7 @@ $router->get('/', [HomeController::class, 'index']);
 
 // CRUD Autores
 $router->get('/autores', [AutorController::class, 'index']);
+$router->get('/autores/resumo', [AutorController::class, 'resumo']);
 $router->get('/autores/novo', [AutorController::class, 'create']);
 $router->post('/autores/novo', [AutorController::class, 'create']);
 $router->get('/autores/editar', [AutorController::class, 'edit']);

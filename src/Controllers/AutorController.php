@@ -107,4 +107,29 @@ final class AutorController
     header('Location: /autores');
     exit;
   }
+
+  public function resumo(): void
+  {
+    $id = (int) ($_GET['id'] ?? 0);
+
+    $resumo = $this->autorModel->getResumoPorAutor($id);
+
+    header('Content-Type: application/json; charset=utf-8');
+
+    if (!$resumo) {
+      http_response_code(404);
+      echo json_encode(['error' => 'Autor não encontrado ou sem dados vinculados.']);
+      return;
+    }
+
+    echo json_encode([
+      'autor_id' => $resumo['autor_id'],
+      'autor_nome' => $resumo['autor_nome'],
+      'total_livros' => $resumo['total_livros'],
+      'valor_total_acervo' => $resumo['valor_total_acervo'],
+      'valor_total_formatado' => number_format($resumo['valor_total_acervo'], 2, ',', '.'),
+      'preco_medio_livro' => $resumo['preco_medio_livro'],
+      'preco_medio_formatado' => number_format($resumo['preco_medio_livro'], 2, ',', '.'),
+    ]);
+  }
 }
