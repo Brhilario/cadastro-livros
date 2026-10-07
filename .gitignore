@@ -1,0 +1,20 @@
+# Dependências do Composer
+/vendor/
+
+# Arquivos de Ambiente
+.env
+
+# Cache e Logs
+*.log
+.phpunit.cache/
+.phpunit.result.cache
+
+# IDEs e Editores
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Sistema Operacional
+.DS_Store
+Thumbs.db
