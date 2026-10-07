@@ -11,9 +11,9 @@ final class RelatorioModel
 {
   private PDO $pdo;
 
-  public function __construct()
+  public function __construct(?PDO $pdo = null)
   {
-    $this->pdo = Database::getConnection();
+    $this->pdo = $pdo ?? Database::getConnection();
   }
 
   /**
@@ -74,5 +74,29 @@ final class RelatorioModel
     }
 
     return $grouped;
+  }
+
+  /**
+   * Calcula os totais consolidados do acervo a partir dos dados agrupados por autor,
+   * garantindo que livros associados a múltiplos autores sejam contabilizados
+   * apenas uma vez no total de obras registradas e no valor total do acervo.
+   *
+   * @param array<int, array{autor_id: int, autor_nome: string, total_livros: int, valor_total: float, livros: array}> $reportData
+   * @return array{total_livros: int, valor_total: float}
+   */
+  public function calcularTotaisGerais(array $reportData): array
+  {
+    $livrosUnicos = [];
+
+    foreach ($reportData as $authorGroup) {
+      foreach ($authorGroup['livros'] as $book) {
+        $livrosUnicos[$book['id']] = (float) $book['valor'];
+      }
+    }
+
+    return [
+      'total_livros' => count($livrosUnicos),
+      'valor_total' => array_sum($livrosUnicos),
+    ];
   }
 }
